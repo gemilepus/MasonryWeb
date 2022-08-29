@@ -20,6 +20,7 @@
 require 'vendor/autoload.php';
 require 'includes/view.php';
 
+
 ?>
 
 <body>
@@ -137,24 +138,24 @@ require 'includes/view.php';
 
             use Symfony\Component\Finder\Finder;
 
-
+            $View = new View();
             $i = "0";
             switch ($i) {
                 case "0":
-                    b4_linechart();
-                    b4_table();
-                    b4_chart();
-                    b4_barchart();
-                    b4_gradechart();
-                    b4_list();
+                    $View->b4_linechart();
+                    $View->b4_table();
+                    $View->b4_chart();
+                    $View->b4_barchart();
+                    $View->b4_gradechart();
+                    $View->b4_list();
 
 
                     break;
                 case "b4_chart":
-                    b4_chart();
+                    $View->b4_chart();
                     break;
                 case "b4_barchart":
-                    b4_barchart();
+                    $View->b4_barchart();
                     break;
             }
 
@@ -165,7 +166,7 @@ require 'includes/view.php';
 
                 $absoluteFilePath = $file->getRealPath();
                 $fileNameWithExtension = $file->getRelativePathname();
-                b4_box("img/" . $file->getRelativePathname());
+                $View->b4_box("img/" . $file->getRelativePathname());
             }
 
             ?>
