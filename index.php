@@ -1,284 +1,866 @@
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
+<!DOCTYPE html>
+<html lang="en">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>MasonryWeb</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
-    <link href="js/viewer.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/main.css?0916">
 
     <script src='https://code.jquery.com/jquery-latest.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <script src="https://fastly.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.37/vue.global.prod.min.js"></script>
+    <script src="js/index.js"></script>
 
+    <style type="text/css">
+    /*box start*/
+    .box {
+        width: 480px;
+        /*height: 120px;*/
+        margin: 5px;
+        background: #ffffff;
+        float: left;
+        text-align: -webkit-center;
+        -webkit-box-shadow: 0px 0px 35px 0px rgba(154, 161, 171, 0.15);
+    }
+
+    .box:hover .tut-title {
+        visibility: visible;
+        background: rgba(0, 0, 0, .50);
+
+    }
+
+    .tut-title {
+        visibility: hidden;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        /*font-size:1.5em;*/
+        margin-bottom: 0;
+        /*padding:15px 88px 15px 15px;*/
+        min-width: 100%;
+        height: 25px;
+        /*border-bottom-right-radius:5px;*/
+        /*border-bottom-left-radius:5px;*/
+        /*background:rgba(0,0,0,.35);*/
+        /*color:#fff*/
+    }
+
+    .tut-title:hover {
+        background: rgba(0, 0, 0, .35);
+        /*cursor: pointer;*/
+        /*transition: transform .8s; !* Animation *!*/
+        /*transform: scale(1.1);*/
+        /*box-shadow: 0px 0px 20px #000;*/
+    }
+
+    /*box end*/
+
+    @keyframes swing {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        10% {
+            transform: rotate(10deg);
+        }
+
+        30% {
+            transform: rotate(0deg);
+        }
+
+        40% {
+            transform: rotate(-10deg);
+        }
+
+        50% {
+            transform: rotate(0deg);
+        }
+
+        60% {
+            transform: rotate(5deg);
+        }
+
+        70% {
+            transform: rotate(0deg);
+        }
+
+        80% {
+            transform: rotate(-5deg);
+        }
+
+        100% {
+            transform: rotate(0deg);
+        }
+    }
+
+    @keyframes sonar {
+        0% {
+            transform: scale(0.9);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(2);
+            opacity: 0;
+        }
+    }
+
+    body {
+        font-size: 0.9rem;
+    }
+
+    .page-wrapper .sidebar-wrapper,
+    .sidebar-wrapper .sidebar-brand>a,
+    .sidebar-wrapper .sidebar-dropdown>a:after,
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li a:before,
+    .sidebar-wrapper ul li a i,
+    .page-wrapper .page-content,
+    .sidebar-wrapper .sidebar-search input.search-menu,
+    .sidebar-wrapper .sidebar-search .input-group-text,
+    .sidebar-wrapper .sidebar-menu ul li a,
+    #show-sidebar,
+    #close-sidebar {
+        -webkit-transition: all 0.3s ease;
+        -moz-transition: all 0.3s ease;
+        -ms-transition: all 0.3s ease;
+        -o-transition: all 0.3s ease;
+        transition: all 0.3s ease;
+    }
+
+    /*----------------page-wrapper----------------*/
+
+    .page-wrapper {
+        height: 100vh;
+
+    }
+
+    .page-wrapper .theme {
+        width: 40px;
+        height: 40px;
+        display: inline-block;
+        border-radius: 4px;
+        margin: 2px;
+    }
+
+    .page-wrapper .theme.chiller-theme {
+        background: #1e2229;
+    }
+
+    /*----------------toggeled sidebar----------------*/
+
+    .page-wrapper.toggled .sidebar-wrapper {
+        left: 0px;
+    }
+
+    @media screen and (min-width: 768px) {
+        .page-wrapper.toggled .page-content {
+            padding-left: 300px;
+        }
+    }
+
+    /*----------------show sidebar button----------------*/
+    #show-sidebar {
+        position: fixed;
+        left: 0;
+        top: 10px;
+        border-radius: 0 4px 4px 0px;
+        width: 35px;
+        transition-delay: 0.3s;
+        z-index: 999;
+    }
+
+    .page-wrapper.toggled #show-sidebar {
+        left: -40px;
+    }
+
+    /*----------------sidebar-wrapper----------------*/
+
+    .sidebar-wrapper {
+        width: 260px;
+        height: 100%;
+        max-height: 100%;
+        position: fixed;
+        top: 0;
+        left: -300px;
+        z-index: 999;
+    }
+
+    .sidebar-wrapper ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar-wrapper a {
+        text-decoration: none;
+    }
+
+    /*----------------sidebar-content----------------*/
+
+    .sidebar-content {
+        max-height: calc(100% - 30px);
+        height: calc(100% - 30px);
+        overflow-y: auto;
+        position: relative;
+    }
+
+    .sidebar-content.desktop {
+        overflow-y: hidden;
+    }
+
+    /*--------------------sidebar-brand----------------------*/
+
+    .sidebar-wrapper .sidebar-brand {
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .sidebar-wrapper .sidebar-brand>a {
+        text-transform: uppercase;
+        font-weight: bold;
+        flex-grow: 1;
+    }
+
+    .sidebar-wrapper .sidebar-brand #close-sidebar {
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+    /*--------------------sidebar-header----------------------*/
+
+    .sidebar-wrapper .sidebar-header {
+        padding: 20px;
+        overflow: hidden;
+    }
+
+    .sidebar-wrapper .sidebar-header .user-pic {
+        float: left;
+        width: 60px;
+        padding: 2px;
+        border-radius: 12px;
+        margin-right: 15px;
+        overflow: hidden;
+    }
+
+    .sidebar-wrapper .sidebar-header .user-pic img {
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+    }
+
+    .sidebar-wrapper .sidebar-header .user-info {
+        float: left;
+    }
+
+    .sidebar-wrapper .sidebar-header .user-info>span {
+        display: block;
+    }
+
+    .sidebar-wrapper .sidebar-header .user-info .user-role {
+        font-size: 12px;
+    }
+
+    .sidebar-wrapper .sidebar-header .user-info .user-status {
+        font-size: 11px;
+        margin-top: 4px;
+    }
+
+    .sidebar-wrapper .sidebar-header .user-info .user-status i {
+        font-size: 8px;
+        margin-right: 4px;
+        color: #5cb85c;
+    }
+
+    /*-----------------------sidebar-search------------------------*/
+
+    .sidebar-wrapper .sidebar-search>div {
+        padding: 10px 20px;
+    }
+
+    /*----------------------sidebar-menu-------------------------*/
+
+    .sidebar-wrapper .sidebar-menu {
+        padding-bottom: 10px;
+    }
+
+    .sidebar-wrapper .sidebar-menu .header-menu span {
+        font-weight: bold;
+        font-size: 14px;
+        padding: 15px 20px 5px 20px;
+        display: inline-block;
+    }
+
+    .sidebar-wrapper .sidebar-menu ul li a {
+        display: inline-block;
+        width: 100%;
+        text-decoration: none;
+        position: relative;
+        padding: 8px 30px 8px 20px;
+    }
+
+    .sidebar-wrapper .sidebar-menu ul li a i {
+        margin-right: 10px;
+        font-size: 12px;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        border-radius: 4px;
+    }
+
+    .sidebar-wrapper .sidebar-menu ul li a:hover>i::before {
+        display: inline-block;
+        animation: swing ease-in-out 0.5s 1 alternate;
+    }
+
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown>a:after {
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        content: "\f105";
+        font-style: normal;
+        display: inline-block;
+        font-style: normal;
+        font-variant: normal;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        background: 0 0;
+        position: absolute;
+        right: 15px;
+        top: 14px;
+    }
+
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu ul {
+        padding: 5px 0;
+    }
+
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li {
+        padding-left: 25px;
+        font-size: 13px;
+    }
+
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li a:before {
+        content: "\f111";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 400;
+        font-style: normal;
+        display: inline-block;
+        text-align: center;
+        text-decoration: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        margin-right: 10px;
+        font-size: 8px;
+    }
+
+    .sidebar-wrapper .sidebar-menu ul li a span.label,
+    .sidebar-wrapper .sidebar-menu ul li a span.badge {
+        float: right;
+        margin-top: 8px;
+        margin-left: 5px;
+    }
+
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li a .badge,
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu li a .label {
+        float: right;
+        margin-top: 0px;
+    }
+
+    .sidebar-wrapper .sidebar-menu .sidebar-submenu {
+        display: none;
+    }
+
+    .sidebar-wrapper .sidebar-menu .sidebar-dropdown.active>a:after {
+        transform: rotate(90deg);
+        right: 17px;
+    }
+
+    /*--------------------------side-footer------------------------------*/
+
+    .sidebar-footer {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        display: flex;
+    }
+
+    .sidebar-footer>a {
+        flex-grow: 1;
+        text-align: center;
+        height: 30px;
+        line-height: 30px;
+        position: relative;
+    }
+
+    .sidebar-footer>a .notification {
+        position: absolute;
+        top: 0;
+    }
+
+    .badge-sonar {
+        display: inline-block;
+        background: #980303;
+        border-radius: 50%;
+        height: 8px;
+        width: 8px;
+        position: absolute;
+        top: 0;
+    }
+
+    .badge-sonar:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        border: 2px solid #980303;
+        opacity: 0;
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+        animation: sonar 1.5s infinite;
+    }
+
+    /*--------------------------page-content-----------------------------*/
+
+    .page-wrapper .page-content {
+        display: inline-block;
+        width: 100%;
+        padding-left: 0px;
+        padding-top: 20px;
+        /* background-color: #2a2b3d; */
+        background-color: #fafbfe;
+    }
+
+    .page-wrapper .page-content>div {
+        padding: 20px 40px;
+    }
+
+    .page-wrapper .page-content {
+        overflow-x: hidden;
+    }
+
+    /*------scroll bar---------------------*/
+
+    ::-webkit-scrollbar {
+        width: 5px;
+        height: 7px;
+    }
+
+    ::-webkit-scrollbar-button {
+        width: 0px;
+        height: 0px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #525965;
+        border: 0px none #ffffff;
+        border-radius: 0px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #525965;
+    }
+
+    ::-webkit-scrollbar-thumb:active {
+        background: #525965;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+        border: 0px none #ffffff;
+        border-radius: 50px;
+    }
+
+    ::-webkit-scrollbar-track:hover {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-track:active {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
+
+    /*-----------------------------chiller-theme-------------------------------------------------*/
+
+    .chiller-theme .sidebar-wrapper {
+        background: #31353D;
+    }
+
+    .chiller-theme .sidebar-wrapper .sidebar-header,
+    .chiller-theme .sidebar-wrapper .sidebar-search,
+    .chiller-theme .sidebar-wrapper .sidebar-menu {
+        border-top: 1px solid #3a3f48;
+    }
+
+    .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu,
+    .chiller-theme .sidebar-wrapper .sidebar-search .input-group-text {
+        border-color: transparent;
+        box-shadow: none;
+    }
+
+    .chiller-theme .sidebar-wrapper .sidebar-header .user-info .user-role,
+    .chiller-theme .sidebar-wrapper .sidebar-header .user-info .user-status,
+    .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu,
+    .chiller-theme .sidebar-wrapper .sidebar-search .input-group-text,
+    .chiller-theme .sidebar-wrapper .sidebar-brand>a,
+    .chiller-theme .sidebar-wrapper .sidebar-menu ul li a,
+    .chiller-theme .sidebar-footer>a {
+        color: #cdcdcd;
+    }
+
+    .chiller-theme .sidebar-wrapper .sidebar-menu ul li:hover>a,
+    .chiller-theme .sidebar-wrapper .sidebar-menu .sidebar-dropdown.active>a,
+    .chiller-theme .sidebar-wrapper .sidebar-header .user-info,
+    .chiller-theme .sidebar-wrapper .sidebar-brand>a:hover,
+    .chiller-theme .sidebar-footer>a:hover i {
+        color: #b8bfce;
+    }
+
+    .page-wrapper.chiller-theme.toggled #close-sidebar {
+        color: #bdbdbd;
+    }
+
+    .page-wrapper.chiller-theme.toggled #close-sidebar:hover {
+        color: #ffffff;
+    }
+
+    .chiller-theme .sidebar-wrapper ul li:hover a i,
+    .chiller-theme .sidebar-wrapper .sidebar-dropdown .sidebar-submenu li a:hover:before,
+    .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu:focus+span,
+    .chiller-theme .sidebar-wrapper .sidebar-menu .sidebar-dropdown.active a i {
+        color: #16c7ff;
+        text-shadow: 0px 0px 10px rgba(22, 199, 255, 0.5);
+    }
+
+    .chiller-theme .sidebar-wrapper .sidebar-menu ul li a i,
+    .chiller-theme .sidebar-wrapper .sidebar-menu .sidebar-dropdown div,
+    .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu,
+    .chiller-theme .sidebar-wrapper .sidebar-search .input-group-text {
+        background: #3a3f48;
+    }
+
+    .chiller-theme .sidebar-wrapper .sidebar-menu .header-menu span {
+        color: #6c7b88;
+    }
+
+    .chiller-theme .sidebar-footer {
+        background: #3a3f48;
+        box-shadow: 0px -1px 5px #282c33;
+        border-top: 1px solid #464a52;
+    }
+
+    .chiller-theme .sidebar-footer>a:first-child {
+        border-left: none;
+    }
+
+    .chiller-theme .sidebar-footer>a:last-child {
+        border-right: none;
+    }
+
+    @media (min-width: 576px) {
+        .box {
+            width: 350px;
+        }
+
+    }
+
+    @media (min-width: 768px) {
+        .box {
+            width: 480px;
+        }
+    }
+
+    .nav-tabs .nav-link {
+        white-space: nowrap;
+    }
+
+    .nav-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+
+    .ql-toolbar {
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+        border: 1px #ddd solid;
+        margin-top: 10px;
+    }
+
+    .qlbt-operation-menu {
+        z-index: 9999 !important;
+    }
+    </style>
 </head>
 <?php
 require 'vendor/autoload.php';
 require 'includes/view.php';
 
-
 ?>
 
 <body>
-    <aside class="side-nav" id="show-side-navigation1">
+    <div class="page-wrapper chiller-theme toggled">
+        <a id="show-sidebar" class="btn btn-sm btn-dark">
+            <i class="fas fa-bars"></i>
+        </a>
+        <nav id="sidebar" class="sidebar-wrapper">
+            <div class="sidebar-content">
+                <div class="sidebar-brand">
+                    <a href="#">MasonryWeb</a>
+                    <div id="close-sidebar">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="sidebar-header">
+                    <div class="user-pic">
+                        <!-- <img class="img-responsive img-rounded"
+                            src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"
+                            alt="User picture"> -->
+                    </div>
+                    <div class="user-info">
+                        <!-- <span class="user-name">Jhon
+                            <strong>Smith</strong>
+                        </span>
+                        <span class="user-role">Administrator</span>
+                        <span class="user-status">
+                            <i class="fa fa-circle"></i>
+                            <span>Online</span>
+                        </span> -->
+                    </div>
+                </div>
 
-        <div class="heading" style="margin-top: 70px;">
-            <!--<img src="https://uniim1.shutterfly.com/ng/services/mediarender/THISLIFE/021036514417/media/23148907008/medium/1501685726/enhance" alt="">-->
-            <div class="info">
-                <h3><a href="#">Title</a></h3>
-                <!--<p>Lorem ipsum dolor sit amet consectetur.</p>-->
+                <div style="color: #ffc107;margin: 15px 30px;">
+                    <?php
+                        function getUserIP()
+                        {
+                            $client = @$_SERVER['HTTP_CLIENT_IP'];
+                            $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+                            $remote = $_SERVER['REMOTE_ADDR'];
+
+                            if (filter_var($client, FILTER_VALIDATE_IP)) {
+                                $ip = $client;
+                            } elseif (filter_var($forward, FILTER_VALIDATE_IP)) {
+                                $ip = $forward;
+                            } else {
+                                $ip = $remote;
+                            }
+
+                            return $ip;
+                        }
+
+                        $user_ip = getUserIP();
+                        echo "IP: " . $user_ip . "<BR/>";
+
+                        ?>
+                </div>
+                <!-- sidebar-header  -->
+                <div class="sidebar-search">
+                    <!-- <div>
+                        <div class="input-group">
+                            <input type="text" class="form-control search-menu" placeholder="Search...">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                <!-- sidebar-search  -->
+
+                <div class="sidebar-menu">
+                    <ul>
+                        <li class="header-menu">
+                            <span>General</span>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-tachometer-alt"></i>
+                                <span>System</span>
+                                <span class="badge badge-pill badge-warning">New</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#">MES
+                                            <span class="badge badge-pill badge-success">Pro</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">KM</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-globe"></i>
+                                <span>SOP</span>
+                                <span class="badge badge-pill badge-danger">3</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#">MES
+
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">SSRS</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="header-menu">
+                            <span>Extra</span>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-book"></i>
+                                <span>Messages</span>
+                                <span class="badge badge-pill badge-primary">Beta</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- sidebar-menu  -->
             </div>
+            <!-- sidebar-content  -->
+            <div class="sidebar-footer">
+                <!-- <a href="#">
+                    <i class="fa fa-bell"></i>
+                    <span class="badge badge-pill badge-warning notification">3</span>
+                </a>
+                <a href="#">
+                    <i class="fa fa-envelope"></i>
+                    <span class="badge badge-pill badge-success notification">7</span>
+                </a>
+                <a href="#">
+                    <i class="fa fa-cog"></i>
+                    <span class="badge-sonar"></span>
+                </a>
+                <a href="#">
+                    <i class="fa fa-power-off"></i>
+                </a> -->
+            </div>
+        </nav>
 
-        </div>
+        <!-- sidebar-wrapper  -->
+        <main class="page-content">
+            <div id="container" style="margin: 0 auto;">
 
-        <div style="color: #ffc107;margin: 15px 30px;">
-            <?php
-                function getUserIP()
-                {
-                    $client = @$_SERVER['HTTP_CLIENT_IP'];
-                    $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
-                    $remote = $_SERVER['REMOTE_ADDR'];
+                <?php
 
-                    if (filter_var($client, FILTER_VALIDATE_IP)) {
-                        $ip = $client;
-                    } elseif (filter_var($forward, FILTER_VALIDATE_IP)) {
-                        $ip = $forward;
-                    } else {
-                        $ip = $remote;
-                    }
+                use Symfony\Component\Finder\Finder;
 
-                    return $ip;
+                $View = new View();
+
+                        $View->b4_linechart();
+                        $View->b4_table();
+                        $View->b4_chart();
+                        $View->b4_barchart();
+                        $View->b4_gradechart();
+                        $View->b4_list();
+
+                $finder = new Finder();
+                $finder->in("img");
+
+                foreach ($finder as $file) {
+
+                    $absoluteFilePath = $file->getRealPath();
+                    $fileNameWithExtension = $file->getRelativePathname();
+                    $View->b4_box("img/" . $file->getRelativePathname());
                 }
 
-                $user_ip = getUserIP();
-                echo "IP: " . $user_ip . "<BR/>";
                 ?>
-        </div>
-        <div class="search">
-            <input type="text" placeholder="MENU"><i class="fa fa-search"></i>
-        </div>
-        <ul class="categories">
-            <li><i class="fa fa-home fa-fw" aria-hidden="true"></i><a href="#"> System</a>
-                <ul class="side-nav-dropdown">
-                    <li><a href="#">MES</a></li>
-                    <li><a href="#">EFGP</a></li>
-                    <li><a href="#">SSRS</a></li>
-                    <li><a href="#">KM</a></li>
-                </ul>
-            </li>
-            <li><i class="fa fa-support fa-fw"></i><a href="#"> SOP</a>
-                <ul class="side-nav-dropdown">
-                    <li><a href="#">EFGP</a></li>
-                    <li><a href="#">MES</a></li>
-                </ul>
-            </li>
-            <p>:</p>
-            <li><i class="fa fa-envelope-open-o fa-fw"></i><a href="#"> Messages <span class="num dang">56</span></a>
-            </li>
-            <li><i class="fa fa-wrench fa-fw"></i><a href="#"> Settings <span class="num prim">6</span></a>
-                <ul class="side-nav-dropdown">
-                    <li><a href="#">Lorem ipsum</a></li>
-                    <li><a href="#">ipsum dolor</a></li>
-                    <li><a href="#">dolor ipsum</a></li>
-                    <li><a href="#">amet consectetur</a></li>
-                    <li><a href="#">ipsum dolor sit</a></li>
-                </ul>
-            </li>
-        </ul>
-    </aside>
-    <section id="contents">
-
-        <nav class="navbar navbar-default sticky-top shadow p-3 mb-5" style="z-index: 9999;">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <!--                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">-->
-                    <!--                        <i class="fa fa-align-right"></i>-->
-                    <!--                    </button>-->
-                    <a id="Button" class="navbar-brand fa fa-bars show-side-btn" href="#"
-                        data-show="show-side-navigation1"></a>
-                    <script>
-                    $('#Button').click(function() {
-                        // $('#container').masonry({
-                        //     isFitWidth: true
-                        // });
-                    });
-                    document.getElementById('Button').addEventListener('click', function() {
-
-                    });
-                    </script>
-                    <a class="navbar-brand" href="#">#<span class="main-color">Dashboard</span></a>
-                </div>
-                <form class="form-inline">
-
-                    <!-- <li class="nav-item dropdown">
-                        <a class="text-white  nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuButton"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </li> -->
-                    <!-- <div><a href="#"><i class="text-white fa fa-comments"></i><span class="text-white">23</span></a></div>
-                    <div><a href="#"><i class="text-white fa fa-bell-o"></i><span class="text-white">98</span></a></div> -->
-                </form>
             </div>
-        </nav>
-        <!-- a block container is required -->
+            <div class="container-fluid">
 
-        <div id="container" style="margin: 0 auto;">
+            </div>
 
-            <?php
+        </main>
+        <!-- page-content" -->
+    </div>
+    <!-- page-wrapper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+    <script>
+    jQuery(function($) {
 
-            use Symfony\Component\Finder\Finder;
-
-            $View = new View();
-            $i = "0";
-            switch ($i) {
-                case "0":
-                    $View->b4_linechart();
-                    $View->b4_table();
-                    $View->b4_chart();
-                    $View->b4_barchart();
-                    $View->b4_gradechart();
-                    $View->b4_list();
-
-
-                    break;
-                case "b4_chart":
-                    $View->b4_chart();
-                    break;
-                case "b4_barchart":
-                    $View->b4_barchart();
-                    break;
+        $(".sidebar-dropdown > a").click(function() {
+            $(".sidebar-submenu").slideUp(200);
+            if (
+                $(this)
+                .parent()
+                .hasClass("active")
+            ) {
+                $(".sidebar-dropdown").removeClass("active");
+                $(this)
+                    .parent()
+                    .removeClass("active");
+            } else {
+                $(".sidebar-dropdown").removeClass("active");
+                $(this)
+                    .next(".sidebar-submenu")
+                    .slideDown(200);
+                $(this)
+                    .parent()
+                    .addClass("active");
             }
+        });
 
-            $finder = new Finder();
-            $finder->in("img");
-
-            foreach ($finder as $file) {
-
-                $absoluteFilePath = $file->getRealPath();
-                $fileNameWithExtension = $file->getRelativePathname();
-                $View->b4_box("img/" . $file->getRelativePathname());
-            }
-
-            ?>
-        </div>
-        <nav>
-            <ul id="pagination" class="pagination justify-content-center fixed-bottom">
-                <li class="page-item-disabled"><a class="page-link" href="#" tabindex="-1">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
-        </nav>
+        $("#close-sidebar").click(function() {
+            $(".page-wrapper").removeClass("toggled");
+        });
+        $("#show-sidebar").click(function() {
+            $(".page-wrapper").addClass("toggled");
+        });
 
 
+    });
 
-    </section>
+    $(function() {
+        let $container = $('#container');
+
+        $container.masonry({
+            isFitWidth: true,
+            columnWidth: 5,
+            animate: true
+        });
+
+        const ratio = window.devicePixelRatio || 1;
+        const w = screen.width * ratio;
+        console.log(w);
+        if (mobileCheck()) {
+
+            $(".box").css("width", screen.width - 22 + "px");
+            $(".box").css("left", 8 + "px");
+
+            $(".ga-charts").each(function() {
+                var id = $(this).attr('_echarts_instance_');
+                window.echarts.getInstanceById(id).resize({
+                    width: 353,
+                });
+            });
+        }
+    });
+    </script>
 
 </body>
-
-
-<script src="js/viewer.min.js"></script>
-<script src='js/main.js?0208'></script>
-<script>
-$(function() {
-    let $container = $('#container');
-
-    // var reMasonry = function() {
-    //     $container.masonry();
-    // };
-
-    $container.masonry({
-        isFitWidth: true,
-        columnWidth: 5,
-        animate: true
-    });
-
-    $('.box').click(function() {
-        return;
-        let $this = $(this);
-        let xsize = parseInt($this.width()) * 1.1;
-        let ysize = parseInt($this.height()) * 1.1;
-        let all = document.getElementsByClassName('box');
-        for (let i = 0; i < all.length; i++) {
-            all[i].style.height = ysize * (100 + getRandomInt(1, 100)) * 0.01.toString() + "px";
-            all[i].style.width = xsize.toString() + "px";
-            // all[i].style.backgroundColor = "#" + getRandomInt(1,999999).toString() ;
-            all[i].style.backgroundColor = HSLToHex(getRandomInt(0, 360), 75, 50);
-        }
-
-        function getRandomInt(min, max) {
-            min = Math.ceil(min);
-            max = Math.floor(max);
-            return Math.floor(Math.random() * (max - min)) + min;
-        }
-        $('#container').masonry({
-            isFitWidth: true
-        });
-    });
-
-    function HSLToHex(h, s, l) {
-        s /= 100;
-        l /= 100;
-
-        let c = (1 - Math.abs(2 * l - 1)) * s,
-            x = c * (1 - Math.abs((h / 60) % 2 - 1)),
-            m = l - c / 2,
-            r = 0,
-            g = 0,
-            b = 0;
-
-        if (0 <= h && h < 60) {
-            r = c;
-            g = x;
-            b = 0;
-        } else if (60 <= h && h < 120) {
-            r = x;
-            g = c;
-            b = 0;
-        } else if (120 <= h && h < 180) {
-            r = 0;
-            g = c;
-            b = x;
-        } else if (180 <= h && h < 240) {
-            r = 0;
-            g = x;
-            b = c;
-        } else if (240 <= h && h < 300) {
-            r = x;
-            g = 0;
-            b = c;
-        } else if (300 <= h && h < 360) {
-            r = c;
-            g = 0;
-            b = x;
-        }
-        // Having obtained RGB, convert channels to hex
-        r = Math.round((r + m) * 255).toString(16);
-        g = Math.round((g + m) * 255).toString(16);
-        b = Math.round((b + m) * 255).toString(16);
-
-        // Prepend 0s, if necessary
-        if (r.length == 1)
-            r = "0" + r;
-        if (g.length == 1)
-            g = "0" + g;
-        if (b.length == 1)
-            b = "0" + b;
-
-        return "#" + r + g + b;
-    }
-});
-</script>
 
 </html>
