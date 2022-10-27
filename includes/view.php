@@ -1,10 +1,18 @@
 <?php
+require 'vendor/autoload.php';
+
+use Symfony\Component\Finder\Finder;
 
 class View {
 
     /**
      * 
      */
+    public function __construct()
+    {
+
+    }
+
     function b4_card()
     {
     ?>
